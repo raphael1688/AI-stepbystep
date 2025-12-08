@@ -71,22 +71,20 @@ Tip: The RSS URL format for a YouTube channel is:
     - Add/enable a “Structured Output Parser” in the AI Agent
     - JSON Example (paste this as the schema/example):
 
-    ```json
-        [
-            {
-                "title": "Video Title",
-                "description": "Video Description",
-                "link": "https://www.youtube.com/shorts/5Pwe3TYnUrw",
-                "thumbnail_url": "https://i1.ytimg.com/vi/ToW_AezocP0/hqdefault.jpg"
-            },
-            {
-                "title": "Video Title",
-                "description": "Video Description",
-                "link": "https://www.youtube.com/shorts/5Pwe3TYnUrw",
-                "thumbnail_url": "https://i1.ytimg.com/vi/ToW_AezocP0/hqdefault.jpg"
-            }
-        ]
-    ```
+    [
+        {
+            "title": "Video Title",
+            "description": "Video Description",
+            "link": "https://www.youtube.com/shorts/5Pwe3TYnUrw",
+            "thumbnail_url": "https://i1.ytimg.com/vi/ToW_AezocP0/hqdefault.jpg"
+        },
+        {
+            "title": "Video Title",
+            "description": "Video Description",
+            "link": "https://www.youtube.com/shorts/5Pwe3TYnUrw",
+            "thumbnail_url": "https://i1.ytimg.com/vi/ToW_AezocP0/hqdefault.jpg"
+        }
+    ]
 
     ![Output Parser](images/yt07-output_parser.png)
 **Step 8:** Attach the chat model:
