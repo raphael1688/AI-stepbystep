@@ -1,6 +1,7 @@
 # n8n YouTube RSS to HTML Newsletter Lab
 
-    ## Goals
+## Goals
+
     By the end of this lab, you will have built a workflow that:
     - Fetches a YouTube channel’s RSS feed
     - Converts the XML to JSON
@@ -10,7 +11,8 @@
 
     Architecture note: This workflow runs entirely on your n8n instance and uses OpenAI’s API for summarization. No local LLM setup is required.
 
-    ## Prerequisites
+## Prerequisites
+
     1. n8n installed and reachable in your browser
     2. Gmail account with OAuth credentials configured in n8n
        - Follow n8n’s Gmail OAuth docs to create credentials in Google Cloud Console and connect them in n8n
@@ -29,7 +31,7 @@
 
     ---
 
-    ## Workflow Creation
+## Workflow Creation
 
     ### Create and trigger the workflow
     1. Create a new workflow in n8n.
@@ -45,14 +47,16 @@
     
     ![HTTP Request](images/yt03-http-req.png)
 
-    ### Convert XML to JSON
+### Convert XML to JSON
+
     4. Add an “XML” node directly after the HTTP Request.
        - Operation: XML to JSON
        - Execute the node
        - Inspect the output; you should see a `feed` object with an `entry` array containing videos and metadata (titles, descriptions, thumbnails, links)
     ![XML Conversion](images/yt04-xml_convert.png)
 
-    ### Transform and summarize with an AI Agent
+### Transform and summarize with an AI Agent
+
     5. Add an “AI Agent” node after the XML node.
     6. Configure the prompt:
        - In the AI Agent’s prompt text, include a clear instruction and pass the `entry` array as context. For example:
@@ -86,7 +90,9 @@
     9. Execute the AI Agent node.
        - Verify the output is a clean JSON object with a `videos` array containing your simplified objects (title, description, link, thumbnail_url)
     ![Test AI Node](images/yt09-agent_test.png)
-    ### Generate the HTML newsletter
+
+### Generate the HTML newsletter
+
     10. Add a “Code” node (JavaScript) after the AI Agent.
     11. Paste the following code to build your HTML from the AI output:
 
@@ -134,14 +140,17 @@
     12. Execute the Code node.
         - Confirm it returns a single newsletter item containing your newsletter HTML
     ![HTML Template](images/yt10-html-template.png)
-    ### Preview the HTML newsletter
+
+### Preview the HTML newsletter
+
     13. Add an “HTML” node after the Code node.
         - Operation: Generate HTML (or render from a string/template)
         - Template/Content: drag the `html` field from the Code node into the HTML node’s template input
         - Execute the HTML node to preview the rendered result inside n8n (the preview window is small, but you should see the content structure)
     ![Preview HTML](images/yt11-preview-html.png)
 
-    ### Send the newsletter email via Gmail
+### Send the newsletter email via Gmail
+
     14. Add a “Gmail” node after the HTML node.
         - Resource: Message
         - Operation: Send
@@ -157,7 +166,8 @@
 
     ---
 
-    ## Optional Enhancements
+## Optional Enhancements
+
     - Replace the Manual Trigger with a Schedule Trigger to send weekly summaries
     - Limit the number of videos (e.g., top 10) by slicing the `entry` array before passing it to the AI Agent, or instruct the agent to cap results
     - Add logic to only include videos published since the last run (store last published time in a data store and filter)
@@ -166,7 +176,8 @@
 
     ---
 
-    ## Troubleshooting
+## Troubleshooting
+
     - HTTP Request returns no data
       - Confirm the Channel ID is correct and the RSS URL format is: https://www.youtube.com/feeds/videos.xml?channel_id=CHANNEL_ID
     - XML parsing issues
@@ -183,13 +194,15 @@
 
     ---
 
-    ## Cost and Performance Notes
+## Cost and Performance Notes
+
     - OpenAI usage for this workflow is minimal; a small model like gpt-4.1-mini typically costs pennies per run
     - Gmail sending is free for typical use with personal accounts (subject to provider limits)
 
     ---
 
-    ## Summary
+## Summary
+
     You now have a working n8n workflow that:
     - Monitors a YouTube channel via RSS
     - Converts XML to JSON and uses an AI Agent to produce a clean, summarized data set
