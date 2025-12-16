@@ -82,7 +82,7 @@ docker compose up -d
 
 Notes:
 
-- If you use a different AI application, substitute its image name and health ports.
+- If you use a different AI application, substitute its image name and ports.
 - In a lab environment, localhost may be replaced with the host IP or a shared ingress.
 
 ## Step 2: Install Trivy
