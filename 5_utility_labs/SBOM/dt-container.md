@@ -34,11 +34,7 @@ Architecture note: Trivy generates a CycloneDX SBOM locally and Dependency-Track
 
 ## Step 1: Prepare the target AI application container (example: Ollama)
 
-We will run a containerized AI application to have a concrete target for SBOM generation. If you want GPU acceleration and have NVIDIA hardware, enable the NVIDIA runtime first.
-
-![Step 1](images/sbom-step01.png)
-
-Run the AI container (Ollama example; adjust image and ports as needed):
+We will run a containerized AI application to have a concrete target for SBOM generation. Run the AI container (Ollama example; adjust image and ports if needed):
 
 ```bash
 docker run -d --name ollama -p 11434:11434 ollama/ollama:latest
@@ -86,14 +82,12 @@ docker compose up -d
 
 Notes:
 
-- If you use a different AI application, substitute its image name and health check.
+- If you use a different AI application, substitute its image name and health ports.
 - In a lab environment, localhost may be replaced with the host IP or a shared ingress.
 
 ## Step 2: Install Trivy
 
 We will install Trivy, an open-source scanner that can generate SBOMs in CycloneDX format. Our example was run on Ubuntu.
-
-![Step 2](images/sbom-step02.png)
 
 Option A (Official install script, works widely):
 
@@ -126,8 +120,6 @@ trivy --version
 
 We will run the bundled edition to simplify setup (no external database required). Data will be persisted in a Docker volume.
 
-![Step 3](images/sbom-step03.png)
-
 ```bash
 # Pull the bundled image
 docker pull dependencytrack/bundled
@@ -146,14 +138,14 @@ docker run -d -m 8192m -p 8080:8080 --name dependency-track -v dependency-track:
 
 Log in, change the admin password, and generate an API key for uploads.
 
-![Step 4](images/sbom-step04.png)
-
 Steps in the UI:
 
 1. Open http://HOST_IP:8080 and log in with admin / admin; set a new password.
 2. Go to Administration -> Access Management -> Teams -> Administrators.
 3. Click the plus icon to create a new API Key for the Administrators team.
 4. Copy the API key and store it securely (you will only see it once).
+
+![Copy the key! You only see it once!](images/01-dt_key.png)
 
 You will also create a project for your AI application:
 
@@ -165,13 +157,13 @@ You will also create a project for your AI application:
 - Mark Latest if appropriate
 - Save the project
 
+![Define your project.](images/02-project.png)
+
 ---
 
 ## Step 5: Generate a CycloneDX SBOM for your AI container image
 
 We will use Trivy to produce a CycloneDX JSON SBOM for the container image you are running.
-
-![Step 5](images/sbom-step05.png)
 
 Identify the image name:
 
@@ -213,8 +205,6 @@ Notes:
 ## Step 6: Upload the SBOM to Dependency-Track via API (Python script)
 
 We will use a short Python script to POST the SBOM to Dependency-Track. It should return a 200 response and a token indicating the upload has been accepted for processing.
-
-![Step 6](images/sbom-step06.png)
 
 Create a working directory and the script:
 
@@ -279,14 +269,14 @@ Expected result:
 
 Reload your project page and confirm components are populated. Newly installed software often shows few or no vulnerabilities, but the components list should be present.
 
-![Step 7](images/sbom-step07.png)
-
 In the UI:
 
 - Go to Projects -> select "Ollama Lab" (version 1.0.1)
 - Check Overview, Components, Services, Dependency Graph, Audit, Vulnerabilities, Exploit Predictions
 - Verify the score and component list reflect the uploaded SBOM
 - Expect multiple pages of components (base image layers, OS packages, and application dependencies)
+
+![Verify your SBOM data](images/03-verify.png)
 
 ---
 
